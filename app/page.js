@@ -1,113 +1,175 @@
-import Image from 'next/image'
+import React from "react"
+import Video from "./components/Video"
 
-export default function Home() {
+const videos = [
+  {
+    id: 0,
+    avatar: "/avatars/avatar-0.png",
+    thumbnail: "/videos/video-0.png",
+    title:
+      "Relaxing Videogame Music from Nintendo Switch to Sleep, Study...",
+    description: `Hello!
+    I'm a game experiencer.
+    Welcome to another "Monster Harvest" with no commentary! I decided to record myself on "Monster Harvest", and see how things turned out! I hope you guys find this relaxing and enjoyable. I will be making a lot more of these to help everyone sleep, relax, and study! `,
+    channel: "stardew valley",
+    views: "117k",
+    duration: "3:57:12",
+    date: "Mar 21, 2023",
+  },
+  {
+    id: 1,
+    avatar: "/avatars/avatar-1.jpeg",
+    thumbnail: "/videos/video-1.png",
+    title: "5 Minute Makeup Tutorial for a Fresh, Natural Look",
+    description:
+      "Get ready in a flash with this easy makeup tutorial. Follow along as I show you how to achieve a fresh, natural look in just 5 minutes!",
+    channel: "glowupguru",
+    views: "1.2M",
+    duration: "5:07",
+    date: "Apr 28, 2023",
+  },
+  {
+    id: 2,
+    avatar: "/avatars/avatar-2.jpeg",
+    thumbnail: "/videos/video-2.png",
+    title: "Amazing Drone Footage of Stunning Beaches",
+    description:
+      "Experience the beauty of nature with this incredible drone footage of some of the world's most stunning beaches. Relax and unwind as you take in the breathtaking views!",
+    channel: "skyhighvisuals",
+    views: "827k",
+    duration: "12:43",
+    date: "Apr 17, 2023",
+  },
+  {
+    id: 3,
+    avatar: "/avatars/avatar-3.jpeg",
+    thumbnail: "/videos/video-3.png",
+    title: "Delicious and Healthy Smoothie Recipes to Try Today",
+    description:
+      "Get your daily dose of fruits and veggies with these delicious and healthy smoothie recipes. Perfect for a quick breakfast or mid-day snack!",
+    channel: "healthyeatingmadeeasy",
+    views: "674k",
+    duration: "8:23",
+    date: "Apr 12, 2023",
+  },
+  {
+    id: 4,
+    avatar: "/avatars/avatar-4.jpeg",
+    thumbnail: "/videos/video-4.png",
+    title: "Learn to Play the Guitar in 30 Days",
+    description:
+      "Always wanted to play the guitar? Now's your chance! Join me as I take you through a 30-day journey to learn this amazing instrument.",
+    channel: "guitarlessons101",
+    views: "1.5M",
+    duration: "32:18",
+    date: "Mar 29, 2023",
+  },
+  {
+    id: 5,
+    avatar: "/avatars/avatar-5.jpeg",
+    thumbnail: "/videos/video-5.png",
+    title: "The Best Yoga Poses for a Calm Mind and Body",
+    description:
+      "Take a break from your hectic day and unwind with these calming yoga poses. Perfect for beginners and experienced yogis alike!",
+    channel: "yogawithsara",
+    views: "926k",
+    duration: "16:39",
+    date: "Mar 25, 2023",
+  },
+  {
+    id: 6,
+    avatar: "/avatars/avatar-6.jpeg",
+    thumbnail: "/videos/video-6.png",
+    title: "10 Easy DIY Projects to Transform Your Home",
+    description:
+      "Get crafty and transform your living space with these easy and affordable DIY projects. From wall art to furniture makeovers, you'll be amazed at what you can create!",
+    channel: "diywithme",
+    views: "579k",
+    duration: "21:12",
+    date: "Mar 15, 2023",
+  },
+  {
+    id: 7,
+    avatar: "/avatars/avatar-7.jpeg",
+    thumbnail: "/videos/video-7.png",
+    title: "Discovering the Wonders of the Amazon Rainforest",
+    description:
+      "Join me on a once-in-a-lifetime adventure through the lush Amazon rainforest. From exotic wildlife to breathtaking landscapes, you won't want to miss this!",
+    channel: "explorewithme",
+    views: "953k",
+    duration: "22:48",
+    date: "May 10, 2023",
+  },
+  {
+    id: 8,
+    avatar: "/avatars/avatar-8.jpeg",
+    thumbnail: "/videos/video-8.png",
+    title: "10 Minute Full Body Workout for Beginners",
+    description:
+      "Get fit and healthy with this quick and easy full body workout. Perfect for beginners or anyone short on time!",
+    channel: "fitnesswithjess",
+    views: "2.4M",
+    duration: "10:23",
+    date: "May 5, 2023",
+  },
+  {
+    id: 9,
+    avatar: "/avatars/avatar-9.jpeg",
+    thumbnail: "/videos/video-9.png",
+    title: "Meditation for Stress Relief and Relaxation",
+    description:
+      "Take a break from your busy day and relax with this guided meditation for stress relief. Let go of your worries and find inner peace!",
+    channel: "mindfulmoments",
+    views: "638k",
+    duration: "14:31",
+    date: "May 2, 2023",
+  },
+  {
+    id: 10,
+    avatar: "/avatars/avatar-10.jpeg",
+    thumbnail: "/videos/video-10.png",
+    title: "How to Make the Perfect Cup of Coffee",
+    description:
+      "Calling all coffee lovers! Learn how to make the perfect cup of coffee with this step-by-step tutorial. Your mornings will never be the same!",
+    channel: "coffeeconnoisseur",
+    views: "1.1M",
+    duration: "7:56",
+    date: "Apr 28, 2023",
+  },
+  {
+    id: 11,
+    avatar: "/avatars/avatar-11.jpeg",
+    thumbnail: "/videos/video-11.png",
+    title: "10 Must-Visit Tourist Attractions in Tokyo",
+    description:
+      "Planning a trip to Tokyo? Don't miss these must-visit tourist attractions, from historic temples to modern landmarks!",
+    channel: "travelwithme",
+    views: "784k",
+    duration: "11:52",
+    date: "Apr 25, 2023",
+  },
+  {
+    id: 12,
+    avatar: "/avatars/avatar-12.png",
+    thumbnail: "/videos/video-12.png",
+    title: "The Ultimate Guide to Baking the Perfect Cake",
+    description:
+      "Learn all the tips and tricks for baking the perfect cake with this comprehensive guide. Join me as we bake together and create something delicious!",
+    channel: "bakingwithbella",
+    views: "346k",
+    duration: "25:15",
+    date: "May 2, 2023",
+  },
+]
+
+const HomePage = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <div className="flex flex-col items-center sm:items-stretch sm:grid sm:grid-cols-2 sm:pl-[82px] sm:px-4 lg:grid-cols-3 w-full  gap-10 sm:gap-x-2 pt-2 mb-24 z-0 relative overflow-y-scroll h-full">
+      {videos.map((video) => (
+        <Video key={video.id} {...video} />
+      ))}
+    </div>
   )
 }
+
+export default HomePage
