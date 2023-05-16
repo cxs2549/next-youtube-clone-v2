@@ -26,7 +26,7 @@ const HeaderContainer = tw.header`
 bg-white dark:bg-neutral-900 relative z-50
 `
 const Logo = tw(Link)`
-flex-1 sm:ml-4 z-30
+sm:ml-4 z-30
 `
 const Icon = tw.button`
 grid place-items-center rounded-full font-semibold w-9 h-9
@@ -190,7 +190,7 @@ const Header = ({ videos }) => {
               />
             </Logo>
             {/* searchbar */}
-            <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px]">
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] z-10">
               <div className="relative w-full mx-4">
                 <input
                   ref={searchRef}
@@ -204,7 +204,7 @@ const Header = ({ videos }) => {
               </div>
             </div>
             {/* icons */}
-            <Icon className="hover:bg-neutral-200/50">
+            <Icon className="ml-auto hover:bg-neutral-200/50">
               <Cast />
             </Icon>
             <Icon className="hover:bg-neutral-200/50 hidden sm:grid">
