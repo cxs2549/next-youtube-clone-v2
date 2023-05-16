@@ -40,7 +40,7 @@ const Video = ({thumbnail, avatar, duration, title, channel, views, date, id}) =
             alt="avatar"
             className="rounded-full cursor-pointer self-center"
           />
-          <div className="text-neutral-600/70 dark:text-neutral-400">
+          <div className="text-neutral-600/80 dark:text-neutral-400">
             <p className=" mt-1 text-sm hover:underline cursor-pointer">
               {channel}
             </p>

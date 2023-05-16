@@ -32,7 +32,7 @@ const Icon = tw.button`
 grid place-items-center rounded-full font-semibold w-9 h-9
 `
 const MenuBackdrop = tw.div`
-fixed inset-0 bg-black/60 z-10 transition-opacity duration-100 h-screen ease-in
+fixed inset-0 bg-black/70 z-10 transition-opacity duration-100 h-screen ease-in
 `
 const Nav = tw.nav`
 flex items-center gap-3 h-[64px]
@@ -221,7 +221,7 @@ const Header = ({ videos }) => {
               <Search />
             </Icon>
             <div
-              className="fixed inset-0 h-screen bg-black/50 backdrop-blur-sm z-10 transition-opacity duration-300 ease-in-out md:hidden"
+              className="fixed inset-0 h-screen bg-black/70 z-10 transition-opacity duration-300 ease-in-out md:hidden"
               style={{
                 opacity: openSearch ? 1 : 0,
                 pointerEvents: openSearch ? "all" : "none",
@@ -307,13 +307,13 @@ const Header = ({ videos }) => {
               id="topics"
               className="text-sm inline-flex whitespace-nowrap gap-1.5"
             >
-              <li className="rounded-full px-3 py-1 bg-neutral-900/90 dark:bg-neutral-200 dark:text-black text-white font-medium">
+              <li className="rounded-full px-3 py-1 bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium">
                 <button>All</button>
               </li>
               {topics.map((topic) => (
                 <li
                   key={topic}
-                  className="rounded-full px-3 py-1 hover:bg-neutral-200/30 hover:opacity-90 whitespace-nowrap opacity-50"
+                  className="rounded-full px-3 py-1 hover:bg-neutral-200/30 hover:opacity-90 whitespace-nowrap opacity-70"
                 >
                   <button>{topic}</button>
                 </li>
@@ -477,12 +477,14 @@ const Header = ({ videos }) => {
             </Icon>
             {openMenu && <p>Liked videos</p>}
           </Link>
-          <div className="flex items-center gap-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90 py-2 pl-4">
-            <Icon>
-              <MenuIcon.DownIcon />
-            </Icon>
-            {openMenu && <p>Show more</p>}
-          </div>
+          {openMenu && (
+            <div className="flex items-center gap-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90 py-2 pl-4">
+              <Icon>
+                <MenuIcon.DownIcon />
+              </Icon>
+              {openMenu && <p>Show more</p>}
+            </div>
+          )}
         </ul>
         <ul className="flex flex-col justify-center">
           {videos.map((video) => (
