@@ -27,7 +27,7 @@ const Logo = tw(Link)`
 sm:ml-[66px]
 `
 const Icon = tw.button`
-grid place-items-center rounded-full font-semibold w-9 h-9 hover:bg-neutral-200/50
+grid place-items-center rounded-full font-semibold w-9 h-9 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90
 `
 const MenuBackdrop = tw.div`
 fixed inset-0 bg-black/70 z-10 transition-opacity duration-400 h-screen ease-in hidden sm:block

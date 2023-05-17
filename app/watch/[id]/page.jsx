@@ -32,12 +32,12 @@ const IdPage = ({ params }) => {
               <p className="font-semibold">{videos[params.id].channel}</p>
               <p className="text-xs opacity-70">16.25k subscribers</p>
             </div>
-            <button className="ml-4 bg-black text-white text-sm font-semibold px-4 py-2.5 rounded-full">
+            <button className="ml-auto md:ml-6 dark:bg-white dark:text-black bg-black text-white text-sm font-semibold px-4 py-2.5 rounded-full">
               Subscribe
             </button>
           </div>
           <div className="flex gap-4 items-center mt-2.5 xl:mt-0">
-            <div className="bg-neutral-100 flex gap-2 divide-x px-3 py-2 rounded-full items-center">
+            <div className="bg-neutral-100 dark:bg-neutral-800 flex gap-2 divide-x px-3 py-2 rounded-full items-center">
               <button className="flex items-center gap-2">
                 <MenuIcon.InactiveLikedVideosIcon />
                 <p className="text-sm font-semibold">5.2k</p>
@@ -48,19 +48,19 @@ const IdPage = ({ params }) => {
                 </div>
               </button>
             </div>
-            <button className="bg-neutral-100 flex gap-2 px-3 py-2 rounded-full items-center">
+            <button className="bg-neutral-100 dark:bg-neutral-800 flex gap-2 px-3 py-2 rounded-full items-center">
               <MenuIcon.ShareIcon />
               <span className="text-sm font-semibold">Share</span>
             </button>
-            <button className="bg-neutral-100 flex gap-2 px-3 py-2 rounded-full items-center">
+            <button className="bg-neutral-100 dark:bg-neutral-800 hidden sm:flex gap-2 px-3 py-2 rounded-full items-center">
               <MenuIcon.ClipIcon />
               <span className="text-sm font-semibold">Clip</span>
             </button>
-            <button className="bg-neutral-100 hidden lg:flex gap-2 px-3 py-2 rounded-full items-center">
+            <button className="bg-neutral-100 dark:bg-neutral-800 hidden sm:flex gap-2 px-3 py-2 rounded-full items-center">
               <MenuIcon.SaveIcon />
               <span className="text-sm font-semibold">Save</span>
             </button>
-            <button className="bg-neutral-100 flex gap-2 p-2 rounded-full items-center">
+            <button className="bg-neutral-100 dark:bg-neutral-800 flex gap-2 p-2 rounded-full items-center">
               <MoreHorizontal />
             </button>
           </div>
