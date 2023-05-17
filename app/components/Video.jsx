@@ -1,5 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Skeleton } from "@mui/material"
+import { useState, useEffect } from "react"
 
 const Video = ({
   thumbnail,
@@ -11,10 +13,18 @@ const Video = ({
   date,
   id,
 }) => {
+  const [loading, setLoading] = useState(false)
+  useEffect(() => {
+    setLoading(true)
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
   return (
     <div className="mx-2 sm:mx-0 max-w-[500px] flex flex-col gap-1">
       <div className="relative">
-        <div className="absolute top-2 right-2 bg-black/50 p-1 rounded-full cursor-pointer">
+        <div className="absolute top-2 right-2 bg-black/50 p-px rounded-full cursor-pointer">
           <Image
             src={`/icons/watchlater.png`}
             width={26}
@@ -32,7 +42,7 @@ const Video = ({
             className="rounded cursor-pointer"
           />
         </Link>
-        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-sm font-semibold px-1 py-px rounded">
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-sm font-semibold px-1 py-px">
           {duration}
         </div>
       </div>
@@ -46,7 +56,7 @@ const Video = ({
             alt="avatar"
             className="rounded-full cursor-pointer self-center"
           />
-          <div className="text-neutral-600/80 dark:text-neutral-400">
+          <div className="text-neutral-700/90 dark:text-neutral-400">
             <p className=" mt-1 text-sm hover:underline cursor-pointer">
               {channel}
             </p>

@@ -1,4 +1,4 @@
-export const videos = [
+export const dummyData = [
     {
       id: 0,
       avatar: "/avatars/avatar-0.png",

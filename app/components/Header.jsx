@@ -33,14 +33,14 @@ const MenuBackdrop = tw.div`
 fixed inset-0 bg-black/70 z-10 transition-opacity duration-400 h-screen ease-in hidden sm:block
 `
 const SearchBackdrop = tw.div`
-  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-neutral-900/80 z-10 dark:from-neutral-800/50 dark:to-transparent transition-opacity duration-500 ease-in-out md:hidden
+  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-neutral-900/80 z-10 dark:from-neutral-900/50 dark:to-black/80 transition-opacity duration-500 ease-in-out md:hidden
 `
 const Nav = tw.nav`
 flex items-center gap-3 h-[64px]
 px-4 w-full pb-1 relative
 `
 const LowerNav = tw.nav`
-px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative
+px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative pb-2
 `
 const Searchbar = () => {
   return (
@@ -119,25 +119,39 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
     </animated.div>
   )
 }
-const Topics = () => (
-  <ul id="topics" className="text-sm inline-flex whitespace-nowrap gap-1.5">
-    <li className="rounded-full px-3 py-1 bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium">
-      <button>All</button>
-    </li>
-    {topics.map((topic) => (
+const Topics = () => {
+  const [currentTopic, setCurrentTopic] = useState("All")
+
+  return (
+    <ul id="topics" className="text-sm inline-flex whitespace-nowrap gap-1.5">
       <li
-        key={topic}
-        className="rounded-full px-3 py-1 hover:bg-neutral-200/30 hover:opacity-90 whitespace-nowrap opacity-70"
+        onClick={() => setCurrentTopic("All")}
+        className={`rounded-full px-3 py-1.5  ${
+          currentTopic === "All" &&
+          "bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium"
+        }`}
       >
-        <button>{topic}</button>
+        <button>All</button>
       </li>
-    ))}
-  </ul>
-)
+      {topics.map((topic) => (
+        <li
+          onClick={() => setCurrentTopic(topic)}
+          key={topic}
+          className={`rounded-full px-3 py-1.5  whitespace-nowrap ${
+            currentTopic === topic &&
+            "bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium"
+          }`}
+        >
+          <button>{topic}</button>
+        </li>
+      ))}
+    </ul>
+  )
+}
 const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
   const pathname = usePathname()
   const menuSpring = useSpring({
-    width: openMenu ? "288px" : "64px",
+    width: openMenu ? "248px" : "64px",
   })
   const textSpring = useSpring({
     opacity: openMenu ? 1 : 0,
@@ -480,7 +494,7 @@ const Header = ({ videos }) => {
             <Logo href={`/`}>
               <Image
                 src={`/logo.png`}
-                width={110}
+                width={100}
                 height={110}
                 alt="logo"
                 className="dark:hidden"
@@ -498,7 +512,7 @@ const Header = ({ videos }) => {
               <MenuIcon.BellIcon />
               <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
             </Icon>
-            <Icon className=" hidden sm:grid">
+            <Icon className="hidden sm:grid">
               <MenuIcon.CreateIcon />
             </Icon>
             <Icon
@@ -531,7 +545,7 @@ const Header = ({ videos }) => {
           >
             {/* left arrow */}
             {scrollX !== 0 && (
-              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[28px] w-[50px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 group-hover:opacity-100">
+              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[32px] w-[80px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 hover:opacity-100 pointer-events-none">
                 <button
                   onClick={() =>
                     slide((scrollRef.current.offsetWidth / 2) * -1)
@@ -539,7 +553,7 @@ const Header = ({ videos }) => {
                   onDoubleClick={() =>
                     slide(scrollRef.current.offsetWidth * -5)
                   }
-                  className="absolute hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1 cursor-pointer left-4"
+                  className="absolute hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1 cursor-pointer left-4 pointer-events-auto"
                 >
                   <ChevronLeft className="dark:text-neutral-300 text-neutral-700/70" />
                 </button>
@@ -548,11 +562,11 @@ const Header = ({ videos }) => {
             <Topics />
             {/* right arrow */}
             {!scrollEnd && (
-              <div className="opacity-0 group-hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[28px]  w-[60px] right-0 bg-gradient-to-l from-white top-[65px] to-transparent transition-opacity duration-300 ease-in">
+              <div className="opacity-0 hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[32px]  w-[80px] right-0 bg-gradient-to-l from-white top-[64px] to-transparent transition-opacity duration-300 ease-in pointer-events-none">
                 <button
                   onClick={() => slide(scrollRef.current.offsetWidth / 2)}
                   onDoubleClick={() => slide(scrollRef.current.offsetWidth * 3)}
-                  className="absolute cursor-pointer right-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1"
+                  className="absolute cursor-pointer right-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1 pointer-events-auto"
                 >
                   <ChevronRight className="dark:text-neutral-300 text-neutral-700/70" />
                 </button>
