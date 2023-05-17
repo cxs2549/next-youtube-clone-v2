@@ -40,7 +40,7 @@ flex items-center gap-3 h-[64px]
 px-4 w-full pb-1 relative
 `
 const LowerNav = tw.nav`
-px-4 pb-2 h-[44px] flex items-center overflow-x-scroll group sm:ml-[66px]
+px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative
 `
 const Searchbar = () => {
   return (
@@ -531,7 +531,7 @@ const Header = ({ videos }) => {
           >
             {/* left arrow */}
             {scrollX !== 0 && (
-              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[44px] w-[50px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 group-hover:opacity-100">
+              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[28px] w-[50px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 group-hover:opacity-100">
                 <button
                   onClick={() =>
                     slide((scrollRef.current.offsetWidth / 2) * -1)
@@ -548,7 +548,7 @@ const Header = ({ videos }) => {
             <Topics />
             {/* right arrow */}
             {!scrollEnd && (
-              <div className="opacity-0 group-hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[44px]  w-[50px] right-0 bg-gradient-to-l from-white to-transparent transition-opacity duration-300 ease-in">
+              <div className="opacity-0 group-hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[28px]  w-[60px] right-0 bg-gradient-to-l from-white top-[65px] to-transparent transition-opacity duration-300 ease-in">
                 <button
                   onClick={() => slide(scrollRef.current.offsetWidth / 2)}
                   onDoubleClick={() => slide(scrollRef.current.offsetWidth * 3)}
