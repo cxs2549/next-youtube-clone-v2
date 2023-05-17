@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 import React from "react"
 import { Plus } from "react-feather"
-import * as MenuIcon from '@/public/icons/icons'
 
 const BottomNav = () => {
   return (

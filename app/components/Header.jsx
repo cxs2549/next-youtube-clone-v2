@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
@@ -21,19 +21,19 @@ import * as MenuIcon from "@/public/icons/icons"
 import { animated, useSpring } from "react-spring"
 
 const HeaderContainer = tw.header`
-bg-white dark:bg-neutral-900 relative z-50
+bg-white dark:bg-neutral-900 relative
 `
 const Logo = tw(Link)`
-sm:ml-16 z-30
+sm:ml-[66px]
 `
 const Icon = tw.button`
 grid place-items-center rounded-full font-semibold w-9 h-9 hover:bg-neutral-200/50
 `
 const MenuBackdrop = tw.div`
-fixed inset-0 bg-black/80 z-10 transition-opacity duration-100 h-screen ease-in hidden sm:block
+fixed inset-0 bg-black/70 z-10 transition-opacity duration-400 h-screen ease-in hidden sm:block
 `
 const SearchBackdrop = tw.div`
-  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-black z-10 dark:from-neutral-800/50 dark:to-transparent transition-opacity duration-300 ease-in-out md:hidden
+  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-neutral-900/80 z-10 dark:from-neutral-800/50 dark:to-transparent transition-opacity duration-500 ease-in-out md:hidden
 `
 const Nav = tw.nav`
 flex items-center gap-3 h-[64px]
@@ -52,24 +52,26 @@ const Searchbar = () => {
           className="rounded-full bg-neutral-200/50 dark:bg-neutral-700 py-2.5 pl-6 w-full outline-none "
         />
         <Icon className="flex-shrink-0 absolute right-1 top-1/2 -translate-y-1/2">
-          <Mic size={22} className="opacity-50" />
+          <MenuIcon.MicIcon className="opacity-50" />
         </Icon>
       </div>
     </div>
   )
 }
-const SearchDropdown = ({ openSearch, searchRef }) => {
+const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
+  const searchSpring = useSpring({
+    transform: openSearch ? "translateY(0)" : "translateY(-230px)",
+    opacity: openSearch ? 1 : 0,
+  })
   return (
-    <div
-      className="fixed z-30 bg-white dark:bg-neutral-800 w-full top-0 left-0 transition-transform duration-200 ease-in-out delay-100 md:hidden"
-      style={{
-        transform: openSearch ? "translateY(0)" : "translateY(-230px)",
-      }}
+    <animated.div
+      style={searchSpring}
+      className="fixed z-10 bg-white dark:bg-neutral-800 w-full top-0 left-0 md:hidden shadow"
     >
       <div className="h-[54px] flex items-center justify-center">
         <div className="relative w-full mx-4">
           <Icon
-            onClick={() => setOpenSearch(false)}
+            onClick={handleSearch}
             className="flex-shrink-0 absolute left-1 top-1/2 -translate-y-1/2"
           >
             <ArrowLeft size={26} className="flex-shrink-0 opacity-50" />
@@ -81,14 +83,14 @@ const SearchDropdown = ({ openSearch, searchRef }) => {
             className="rounded-full bg-neutral-200/50 dark:bg-neutral-700 py-2.5 pl-12 w-full outline-none "
           />
           <Icon className="flex-shrink-0 absolute right-1 top-1/2 -translate-y-1/2">
-            <Mic size={22} className="opacity-50" />
+            <MenuIcon.MicIcon className="opacity-50" />
           </Icon>
         </div>
       </div>
       <ul className="font-medium">
         <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
           <Icon className="opacity-50">
-            <Search />
+            <MenuIcon.SearchIcon />
           </Icon>
           <p>power book 2 season 3 episode 10</p>
           <Icon className="ml-auto">
@@ -97,7 +99,7 @@ const SearchDropdown = ({ openSearch, searchRef }) => {
         </li>
         <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
           <Icon className="opacity-50">
-            <Search />
+            <MenuIcon.SearchIcon />
           </Icon>
           <p>mayachin shrine</p>
           <Icon className="ml-auto">
@@ -106,7 +108,7 @@ const SearchDropdown = ({ openSearch, searchRef }) => {
         </li>
         <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
           <Icon className="opacity-50">
-            <Search />
+            <MenuIcon.SearchIcon />
           </Icon>
           <p>jidion reacts to lil malibu</p>
           <Icon className="ml-auto">
@@ -114,7 +116,7 @@ const SearchDropdown = ({ openSearch, searchRef }) => {
           </Icon>
         </li>
       </ul>
-    </div>
+    </animated.div>
   )
 }
 const Topics = () => (
@@ -140,26 +142,25 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
   const textSpring = useSpring({
     opacity: openMenu ? 1 : 0,
   })
+  const handleClick = () => {
+    if (openMenu) {
+      setTimeout(() => handleMenu(), 600)
+    } else {
+      null
+    }
+  }
   return (
     <animated.div
       ref={menuRef}
       style={menuSpring}
-      className={`fixed left-0 top-0 bg-white dark:bg-neutral-800 backdrop-blur-sm shadow z-20  text-sm overflow-hidden hidden sm:block overflow-y-scroll h-full`}
+      className={`fixed z-20 left-0 top-0 bg-white dark:bg-neutral-800 backdrop-blur-sm shadow  text-sm overflow-hidden hidden sm:block overflow-y-scroll h-full`}
     >
       <ul className="grid border-b dark:border-neutral-700">
         <div
-          className={`flex items-center gap-4  py-2 px-4 ${
+          className={`flex cursor-pointer items-center gap-4  py-2 px-4 ${
             openMenu ? "justify-between" : "justify-start"
           }`}
         >
-          {openMenu && (
-            <div className="flex items-center gap-4">
-              <Icon>
-                <MenuIcon.SettingsIcon />
-              </Icon>
-              <animated.p>Settings</animated.p>
-            </div>
-          )}
           <Icon
             onClick={handleMenu}
             className={`-rotate-90 transition-all duration-150 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90 ${
@@ -168,8 +169,14 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
           >
             <MenuIcon.DownIcon />
           </Icon>
+          {openMenu && (
+            <Icon>
+              <MenuIcon.SettingsIcon />
+            </Icon>
+          )}
         </div>
         <Link
+          onClick={handleClick}
           href={`/`}
           className={`flex items-center gap-4 hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90  py-2 pl-4 ${
             pathname === "/" &&
@@ -188,6 +195,7 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
           {openMenu && <animated.p>Home</animated.p>}
         </Link>
         <Link
+          onClick={handleClick}
           href={`/shorts`}
           className={`flex hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 items-center gap-4  py-2 pl-4 ${
             pathname === "/shorts" &&
@@ -206,6 +214,7 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
           {openMenu && <animated.p>Shorts</animated.p>}
         </Link>
         <Link
+          onClick={handleClick}
           className={`flex hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 items-center gap-4  py-2 pl-4 ${
             pathname === "/subscriptions" &&
             "bg-neutral-200/90 dark:bg-neutral-700/90 font-medium"
@@ -250,13 +259,13 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
           {openMenu && <animated.p>History</animated.p>}
         </Link>
         <Link
-          href={`/shorts`}
+          href={`/yourvideos`}
           className={`flex hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 items-center gap-4  py-2 pl-4 ${
             pathname === "/shorts" &&
             "bg-neutral-200/90 dark:bg-neutral-700/90 font-medium"
           }`}
         >
-          {pathname === "/shorts" ? (
+          {pathname === "/yourvideos" ? (
             <Icon>
               <MenuIcon.ShortsIcon />
             </Icon>
@@ -285,7 +294,7 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
         </Link>
         <Link
           href={`/likedvideos`}
-          className="flex items-center gap-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90 py-2 pl-4"
+          className="flex items-center gap-4 hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 py-2 pl-4"
         >
           <Icon>
             <MenuIcon.InactiveLikedVideosIcon />
@@ -296,23 +305,23 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
             </animated.p>
           )}
         </Link>
-        {/* {openMenu && (
+        {openMenu && (
           <animated.div
             style={textSpring}
-            className="flex items-center gap-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90 py-2 pl-4"
+            className="flex items-center gap-4 hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 py-2 pl-4 cursor-pointer"
           >
             <Icon>
               <MenuIcon.DownIcon />
             </Icon>
             {openMenu && <p>Show more</p>}
           </animated.div>
-        )} */}
+        )}
       </ul>
       <ul className="grid">
         {videos.map((video) => (
           <li
             key={video.id}
-            className="flex gap-5 pl-4 w-full py-3 items-center hover:bg-neutral-200/60 dark:hover:bg-neutral-700/90 cursor-pointer"
+            className="flex gap-5 pl-4 w-full py-3 items-center hover:bg-neutral-200/90 dark:hover:bg-neutral-700/90 cursor-pointer"
           >
             <div className="relative">
               <div className="absolute top-0 right-0 rounded-full bg-blue-400 w-2 h-2" />
@@ -362,7 +371,6 @@ const topics = [
   "Spirituality and religion",
   "Language learning",
 ]
-
 const Header = ({ videos }) => {
   const [openMenu, setOpenMenu] = useState(false)
   const [openSearch, setOpenSearch] = useState(false)
@@ -371,26 +379,26 @@ const Header = ({ videos }) => {
   const scrollRef = useRef(null)
   const menuRef = useRef(null)
   const searchRef = useRef(null)
+  const pathname = usePathname()
 
   const handleSearch = () => {
     setOpenSearch(!openSearch)
     !openSearch
       ? (document.body.style.overflow = "hidden")
       : (document.body.style.overflow = "auto")
-    menuRef.current.style.zIndex = !openSearch ? "0" : "20"
-    menuRef.current.style.opacity = !openSearch ? ".5" : "1"
+    menuRef.current.style.zIndex = openSearch ? "10" : "1"
     setTimeout(
       () =>
         openSearch ? searchRef.current?.blur() : searchRef.current?.focus(),
       500
     )
   }
-  const handleMenu = () => {
-    setOpenMenu(!openMenu)
+  const handleMenu = useCallback(() => {
+    setOpenMenu((prevOpenMenu) => !prevOpenMenu)
     !openMenu
       ? (document.body.style.overflow = "hidden")
       : (document.body.style.overflow = "auto")
-  }
+  }, [openMenu])
   const slide = (shift) => {
     const scrollLeft = scrollRef.current?.scrollLeft
     const maxScrollLeft =
@@ -453,8 +461,19 @@ const Header = ({ videos }) => {
     }
     return () => {}
   }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
+
   return (
     <>
+      <MenuBackdrop
+        onClick={handleMenu}
+        className={openMenu ? "opacity-100" : "opacity-0 pointer-events-none"}
+      />
+      <Menu
+        openMenu={openMenu}
+        handleMenu={handleMenu}
+        menuRef={menuRef}
+        videos={videos}
+      />
       <Headroom>
         <HeaderContainer>
           <Nav>
@@ -475,21 +494,18 @@ const Header = ({ videos }) => {
               />
             </Logo>
             <Searchbar />
-            <Icon className="ml-auto ">
-              <Cast />
+            <Icon className="relative ml-auto">
+              <MenuIcon.BellIcon />
+              <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
             </Icon>
             <Icon className=" hidden sm:grid">
-              <Video />
-            </Icon>
-            <Icon className="relative ">
-              <Bell />
-              <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
+              <MenuIcon.CreateIcon />
             </Icon>
             <Icon
               onClick={handleSearch}
               className="hover:bg-neutral-200/50 md:hidden"
             >
-              <Search />
+              <MenuIcon.SearchIcon />
             </Icon>
             <SearchBackdrop
               style={{
@@ -498,10 +514,21 @@ const Header = ({ videos }) => {
               }}
               onClick={handleSearch}
             />
-            <SearchDropdown openSearch={openSearch} searchRef={searchRef} />
-            <Icon className="bg-[#FC0001] text-white hover:bg-red-500">t</Icon>
+            <SearchDropdown
+              openSearch={openSearch}
+              searchRef={searchRef}
+              setOpenSearch={setOpenSearch}
+              handleSearch={handleSearch}
+            />
+            <Icon className="bg-[#FC0001] text-white hover:bg-red-500">
+              <p className="-translate-y-px">c</p>
+            </Icon>
           </Nav>
-          <LowerNav ref={scrollRef} onScroll={scrollCheck}>
+          <LowerNav
+            ref={scrollRef}
+            onScroll={scrollCheck}
+            style={{ display: pathname === "/" ? "block" : "none" }}
+          >
             {/* left arrow */}
             {scrollX !== 0 && (
               <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[44px] w-[50px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 group-hover:opacity-100">
@@ -534,16 +561,6 @@ const Header = ({ videos }) => {
           </LowerNav>
         </HeaderContainer>
       </Headroom>
-      <Menu
-        openMenu={openMenu}
-        handleMenu={handleMenu}
-        menuRef={menuRef}
-        videos={videos}
-      />
-      <MenuBackdrop
-        onClick={handleMenu}
-        className={openMenu ? "opacity-100" : "opacity-0 pointer-events-none"}
-      />
     </>
   )
 }

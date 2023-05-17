@@ -1,8 +1,16 @@
 import Image from "next/image"
 import Link from "next/link"
-import React from "react"
 
-const Video = ({thumbnail, avatar, duration, title, channel, views, date, id}) => {
+const Video = ({
+  thumbnail,
+  avatar,
+  duration,
+  title,
+  channel,
+  views,
+  date,
+  id,
+}) => {
   return (
     <div className="mx-2 sm:mx-0 max-w-[500px] flex flex-col gap-1">
       <div className="relative">
@@ -21,7 +29,7 @@ const Video = ({thumbnail, avatar, duration, title, channel, views, date, id}) =
             width={500}
             height={300}
             alt="video"
-            className="rounded-lg cursor-pointer"
+            className="rounded cursor-pointer"
           />
         </Link>
         <div className="absolute bottom-2 right-2 bg-black/70 text-white text-sm font-semibold px-1 py-px rounded">
@@ -29,9 +37,7 @@ const Video = ({thumbnail, avatar, duration, title, channel, views, date, id}) =
         </div>
       </div>
       <div className="">
-        <h3 className="font-semibold cursor-pointer">
-          {title}
-        </h3>
+        <h3 className="font-semibold cursor-pointer">{title}</h3>
         <div className="flex items-center gap-2 mt-1">
           <Image
             src={avatar}
@@ -44,7 +50,9 @@ const Video = ({thumbnail, avatar, duration, title, channel, views, date, id}) =
             <p className=" mt-1 text-sm hover:underline cursor-pointer">
               {channel}
             </p>
-            <p className=" text-sm">{views} views &bull; {date}</p>
+            <p className=" text-sm">
+              {views} views &bull; {date}
+            </p>
           </div>
         </div>
       </div>
