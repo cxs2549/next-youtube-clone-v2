@@ -19,7 +19,7 @@ import Headroom from "react-headroom"
 import { usePathname } from "next/navigation"
 import * as MenuIcon from "@/public/icons/icons"
 import { animated, useSpring } from "react-spring"
-
+import { useOnClickOutside } from "../hooks/useOnClickOutside"
 const HeaderContainer = tw.header`
 bg-white dark:bg-neutral-900 relative
 `
@@ -525,10 +525,11 @@ const Header = ({ videos }) => {
               <MenuIcon.BellIcon />
               <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
               {/* notifications */}
+
               <div
-                className={`fixed sm:absolute z-10 dark:bg-neutral-800 bg-white opacity-0 pointer-events-none rounded-lg shadow-lg top-full w-[96%] sm:min-w-[300px] xl:min-w-[500px] mx-auto left-1/2 sm:left-auto sm:right-0 sm:translate-x-0 -translate-x-1/2 items-center grid divide-y translate-y-4 overflow-hidden dark:divide-neutral-700 transition-opacity duration-150 ease-in max-w-md sm:ml-8 backdrop-blur-sm overflow-y-scroll h-[calc(100vh-3rem)] ${
+                className={`absolute z-50 dark:bg-neutral-800 bg-white opacity-0 pointer-events-none rounded-lg shadow-xl top-9 right-0 sm:min-w-[300px] xl:min-w-[500px] mx-auto  sm:left-auto sm:right-0 sm:translate-x-0  items-center grid divide-y   overflow-hidden dark:divide-neutral-700 transition-opacity duration-150 ease-in max-w-md sm:ml-8 backdrop-blur-sm overflow-y-scroll h-[calc(100vh-14rem)] ${
                   showNotifcations && "opacity-100 pointer-events-auto"
-                }`}
+                } ${pathname !== "/" && ""}`}
               >
                 {videos.slice(0, 3).map((video) => (
                   <div
@@ -552,21 +553,25 @@ const Header = ({ videos }) => {
                       <div className="flex flex-col">
                         <Image
                           src={video.thumbnail}
-                          width={270}
+                          width={200}
                           height={48}
                           alt=""
-                          className="rounded flex-1 cursor-pointer w-full flex-shrink-0  min-w-[158px]"
+                          className="rounded cursor-pointer flex-shrink-0 min-w-[220px]"
                         />
 
-                        <p className="text-left self-start pt-2 text-sm">
+                        <p className="text-left self-start pt-2 text-sm max-w-[256px]">
                           {video.title}
                         </p>
                       </div>
-                      <p className="text-xs mt-1 font-light">2 weeks ago</p>
+                      <p className="text-[11px] opacity-90 mt-1 font-light">
+                        2 weeks ago
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
+              {/* notifications backdrop */}
+              <div className={`fixed inset-0 h-screen bg-black/70 z-40 opacity-0 pointer-events-none ${showNotifcations && 'opacity-100'}`}></div>
             </Icon>
             <Icon className="hidden sm:grid">
               <MenuIcon.CreateIcon />
@@ -636,25 +641,3 @@ const Header = ({ videos }) => {
 }
 
 export default Header
-
-const useOnClickOutside = (ref, handler) => {
-  const savedHandler = useRef()
-
-  useEffect(() => {
-    savedHandler.current = handler
-  }, [handler])
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (ref.current && !ref.current.contains(event.target)) {
-        savedHandler.current()
-      }
-    }
-
-    document.addEventListener("click", handleClickOutside)
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside)
-    }
-  }, [ref])
-}

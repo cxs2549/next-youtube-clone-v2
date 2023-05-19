@@ -30,14 +30,18 @@ const Topics = ({ topics }) => {
   const [currentTopic, setCurrentTopic] = useState("All")
 
   return (
-    <ul id="topics" className="text-sm inline-flex  w-full gap-1.5 flex-wrap">
+    <ul
+      id="topics"
+      className="text-sm inline-flex  w-full gap-1.5 flex-wrap mb-3"
+    >
       {topics.map((topic) => (
         <li
           onClick={() => setCurrentTopic(topic)}
           key={topic}
-          className={`rounded-full px-3 py-1.5  whitespace-nowrap ${
-            currentTopic === topic &&
-            "bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium"
+          className={`rounded-full px-3 py-1.5  whitespace-nowrap  ${
+            currentTopic === topic
+              ? "dark:bg-neutral-100 dark:text-black text-white font-medium bg-neutral-900"
+              : "dark:bg-neutral-800/70 bg-neutral-100"
           }`}
         >
           <button>{topic}</button>
@@ -139,15 +143,15 @@ const IdPage = ({ params }) => {
     return () => clearTimeout()
   }, [])
   return (
-    <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20">
-      <div className=" grid lg:flex gap-2.5 mx-2 sm:mx-0">
+    <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20 sm:mb-0">
+      <div className=" grid lg:flex gap-2.5 lg:gap-6 mx-2 sm:mx-0">
         {/* video & info/comment */}
-        <div className="flex flex-col gap-2.5 flex-1">
+        <div className="flex flex-col gap-2.5 pb-4 flex-1 overflow-y-scroll  h-[calc(100vh-80px)]">
           <div
             style={{
               animation: loading && "pulseAnimation 2s linear infinite",
             }}
-            className={`rounded-xl overflow-hidden relative transition-all duration-200 ease-in-out`}
+            className={`rounded-xl overflow-hidden relative transition-all flex-shrink-0 duration-200 ease-in-out`}
           >
             <Image
               src={dummyData[params.id].thumbnail}
@@ -171,17 +175,26 @@ const IdPage = ({ params }) => {
               </div>
             )}
           </div>
-          <div className="w-full bg-gradient-to-t from-neutral-900/90 text-white to-transparent flex items-center gap-2.5">
+          <div className="w-full dark:text-white/90  flex items-center gap-4">
             <button>
-              <Play size={28} className="" />
+              <Play
+                size={28}
+                className="stroke-black dark:stroke-white/70 fill-black dark:fill-white/90"
+              />
             </button>
             <button>
-              <SkipForward size={28} className="" />
+              <SkipForward
+                size={28}
+                className="fill-black dark:fill-white/90 stroke-black dark:stroke-white/70"
+              />
             </button>
             <button>
-              <Volume2 size={28} className="" />
+              <Volume2
+                size={28}
+                className="stroke-black dark:stroke-white/90"
+              />
             </button>
-            <p className="text-sm">0:00 / 4:20:21</p>
+            <p className="text-sm opacity-80">0:00 / 4:20:21</p>
             <button className="ml-auto">
               <Settings />
             </button>
@@ -326,7 +339,7 @@ const IdPage = ({ params }) => {
                     <div className="flex items-center gap-3 mt-1.5">
                       <button className="flex text-xs items-center gap-1">
                         <Icon.InactiveLikedVideosIcon />
-                        <p>1</p>
+                        <p>{item.id * 52 + 14}</p>
                       </button>
                       <button className="rotate-180">
                         <Icon.InactiveLikedVideosIcon />
@@ -342,38 +355,8 @@ const IdPage = ({ params }) => {
           </section>
         </div>
         {/* filters/recs */}
-        <div className="flex overflow-y-scroll flex-col lg:max-w-[31%] gap-5 sm:min-w-[380px] w-full">
-          <Chips ref={scrollRef} onScroll={scrollCheck}>
-            {/* left arrow */}
-            {scrollX !== 0 && (
-              <div className="sticky bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[32px] w-[80px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 hover:opacity-100 pointer-events-none">
-                <button
-                  onClick={() =>
-                    slide((scrollRef.current.offsetWidth / 2) * -1)
-                  }
-                  onDoubleClick={() =>
-                    slide(scrollRef.current.offsetWidth * -5)
-                  }
-                  className="absolute hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1 cursor-pointer left-4 pointer-events-auto"
-                >
-                  <ChevronLeft className="dark:text-neutral-300 text-neutral-700/70" />
-                </button>
-              </div>
-            )}
-            <Topics topics={topics} />
-            {/* right arrow */}
-            {!scrollEnd && (
-              <div className=" sticky dark:from-neutral-900 flex items-center h-[32px]  w-[80px] right-0 bg-gradient-to-l from-white to-transparent transition-opacity duration-300 ease-in pointer-events-none">
-                <button
-                  onClick={() => slide(scrollRef.current.offsetWidth / 2)}
-                  onDoubleClick={() => slide(scrollRef.current.offsetWidth * 3)}
-                  className="absolute cursor-pointer right-4 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50 hover:shadow-sm rounded-full p-1 pointer-events-auto"
-                >
-                  <ChevronRight className="dark:text-neutral-300 text-neutral-700/70" />
-                </button>
-              </div>
-            )}
-          </Chips>
+        <div className="flex overflow-y-scroll flex-col lg:max-w-[31%] gap-3 sm:min-w-[380px] h-[calc(100vh-80px)] w-full pb-3">
+          <Topics topics={topics} />
           <section className="grid gap-2.5">
             {dummyData.map((item) => (
               <div key={item.id} className="flex gap-2.5">
