@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Skeleton } from "@mui/material"
 import { useState, useEffect } from "react"
 
 const Video = ({
@@ -21,8 +20,20 @@ const Video = ({
     }, 500)
     return () => clearTimeout(timer)
   }, [])
+  const postedDate = new Date(date)
+  const currentDate = new Date()
+
+  const differenceInMilliseconds = currentDate - postedDate
+
+  const monthsAgo = Math.round(
+    differenceInMilliseconds / (1000 * 60 * 60 * 24 * 30)
+  )
+  const daysAgo = Math.round(differenceInMilliseconds / (1000 * 60 * 60 * 24))
+
+  const unit =
+    monthsAgo === 1 ? "month ago" : monthsAgo > 1 ? "months ago" : "days ago"
   return (
-    <div className="mx-2 sm:mx-0 max-w-[500px] flex flex-col gap-1">
+    <div className="mx-2 sm:mx-0 max-w-[500px] flex flex-col gap-1.5">
       <div className="relative">
         <div className="absolute top-2 right-2 bg-black/50 p-px rounded-full cursor-pointer">
           <Image
@@ -47,8 +58,8 @@ const Video = ({
         </div>
       </div>
       <div className="">
-        <h3 className="font-semibold cursor-pointer">{title}</h3>
-        <div className="flex items-center gap-2 mt-1">
+        <h3 className="font-semibold cursor-pointer leading-5">{title}</h3>
+        <div className="flex items-center mt-1.5 gap-2">
           <Image
             src={avatar}
             width={36}
@@ -57,11 +68,9 @@ const Video = ({
             className="rounded-full cursor-pointer self-center"
           />
           <div className="text-neutral-700/90 dark:text-neutral-400">
-            <p className=" mt-1 text-sm hover:underline cursor-pointer">
-              {channel}
-            </p>
+            <p className=" text-sm hover:underline cursor-pointer">{channel}</p>
             <p className=" text-sm">
-              {views} views &bull; {date}
+              {views} views &bull; {monthsAgo || daysAgo} {unit}
             </p>
           </div>
         </div>
