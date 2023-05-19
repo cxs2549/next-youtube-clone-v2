@@ -44,7 +44,7 @@ px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative pb-2
 `
 const Searchbar = () => {
   return (
-    <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] z-10">
+    <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] z-10 sm:ml-[23px]">
       <div className="relative w-full mx-4">
         <input
           type="search"

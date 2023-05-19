@@ -105,6 +105,11 @@ const SaveIcon = () => (
     <path d="M22,13h-4v4h-2v-4h-4v-2h4V7h2v4h4V13z M14,7H2v1h12V7z M2,12h8v-1H2V12z M2,16h8v-1H2V16z"></path>
   </svg>
 )
+const SortIcon = () => (
+  <svg viewBox="0 0 24 24"  width={24} fill="currentColor">
+    <path d="M21,6H3V5h18V6z M15,11H3v1h12V11z M9,17H3v1h6V17z"></path>
+  </svg>
+)
 export {
   HomeIcon,
   InactiveHomeIcon,
@@ -126,4 +131,5 @@ export {
   ShareIcon,
   ClipIcon,
   SaveIcon,
+  SortIcon,
 }
