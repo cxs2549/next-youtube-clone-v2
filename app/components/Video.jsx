@@ -53,7 +53,7 @@ const Video = ({
             className="rounded-lg cursor-pointer"
           />
         </Link>
-        <div className="absolute bottom-2 right-2 bg-black/70 rounded text-white text-sm font-semibold px-1 py-px">
+        <div className="absolute bottom-2 right-2 bg-black/70 rounded text-white text-[12px] font-semibold px-1 py-px">
           {duration}
         </div>
       </div>

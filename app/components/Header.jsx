@@ -526,35 +526,44 @@ const Header = ({ videos }) => {
               <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
               {/* notifications */}
               <div
-                className={`fixed sm:absolute z-10 dark:bg-neutral-800 bg-white opacity-0 pointer-events-none rounded-lg shadow-lg top-full w-[96%] sm:min-w-[420px] xl:min-w-[500px] mx-auto left-1/2 sm:left-auto sm:right-0 sm:translate-x-0 -translate-x-1/2 items-center grid divide-y translate-y-4 overflow-hidden dark:divide-neutral-700 transition-opacity duration-150 ease-in max-w-md sm:ml-8 ${
+                className={`fixed sm:absolute z-10 dark:bg-neutral-800 bg-white opacity-0 pointer-events-none rounded-lg shadow-lg top-full w-[96%] sm:min-w-[300px] xl:min-w-[500px] mx-auto left-1/2 sm:left-auto sm:right-0 sm:translate-x-0 -translate-x-1/2 items-center grid divide-y translate-y-4 overflow-hidden dark:divide-neutral-700 transition-opacity duration-150 ease-in max-w-md sm:ml-8 backdrop-blur-sm overflow-y-scroll h-[calc(100vh-3rem)] ${
                   showNotifcations && "opacity-100 pointer-events-auto"
                 }`}
               >
                 {videos.slice(0, 3).map((video) => (
-                  <div key={video.id} className="flex items-center gap-3 p-3 dark:hover:bg-neutral-700 hover:bg-neutral-200">
-                    <Image
-                      src={video.avatar}
-                      width={38}
-                      height={38}
-                      alt=""
-                      className="rounded-full cursor-pointer flex-shrink-0 self-start pb-px"
-                    />
+                  <div
+                    key={video.id}
+                    className="flex items-center gap-3 p-3 dark:hover:bg-neutral-700 hover:bg-neutral-200"
+                  >
                     <div className="text-sm flex flex-col items-start justify-start">
-                      <p className="whitespace-nowrap font-medium mb-1">
-                        {video.channel} uploaded:
-                      </p>
+                      <div className="flex gap-2 items-center mb-2">
+                        <Image
+                          src={video.avatar}
+                          width={32}
+                          height={32}
+                          alt=""
+                          className="rounded-full cursor-pointer flex-shrink-0 self-start pb-px"
+                        />
+                        <p className="whitespace-nowrap font-medium mb-1">
+                          {video.channel} uploaded:
+                        </p>
+                      </div>
 
-                      <Image
-                        src={video.thumbnail}
-                        width={168}
-                        height={48}
-                        alt=""
-                        className="rounded flex-1 cursor-pointer flex-shrink-0  min-w-[168px]"
-                      />
+                      <div className="flex flex-col">
+                        <Image
+                          src={video.thumbnail}
+                          width={270}
+                          height={48}
+                          alt=""
+                          className="rounded flex-1 cursor-pointer w-full flex-shrink-0  min-w-[158px]"
+                        />
 
+                        <p className="text-left self-start pt-2 text-sm">
+                          {video.title}
+                        </p>
+                      </div>
                       <p className="text-xs mt-1 font-light">2 weeks ago</p>
                     </div>
-                    <p className="text-left self-start pt-4 mt-1 text-sm">{video.title}</p>
                   </div>
                 ))}
               </div>

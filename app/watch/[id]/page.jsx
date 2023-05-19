@@ -7,13 +7,20 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Filter,
+  Maximize,
   MoreHorizontal,
+  Play,
+  Settings,
+  SkipForward,
+  Volume2,
 } from "react-feather"
 import tw from "tailwind-styled-components"
 import { useEffect, useRef, useState } from "react"
 import * as Icon from "@/public/icons/icons"
 import Link from "next/link"
+import { Skeleton } from "@mui/material"
+import Lottie from "lottie-react"
+import playPulse from "@/public/play.json"
 
 const Chips = tw.div`
  flex items-center w-full mb-2.5 overflow-x-scroll group relative
@@ -41,6 +48,7 @@ const Topics = ({ topics }) => {
 }
 
 const IdPage = ({ params }) => {
+  const [loading, setLoading] = useState(true)
   const [showComments, setShowComments] = useState(false)
   const topics = [
     "All",
@@ -126,54 +134,113 @@ const IdPage = ({ params }) => {
     }
     return () => {}
   }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout()
+  }, [])
   return (
     <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20">
       <div className=" grid lg:flex gap-2.5 mx-2 sm:mx-0">
         {/* video & info/comment */}
         <div className="flex flex-col gap-2.5 flex-1">
-          <Image
-            src={dummyData[params.id].thumbnail}
-            width={1280}
-            height={720}
-            alt=""
-            className="rounded "
-          />
+          <div
+            style={{
+              animation: loading && "pulseAnimation 2s linear infinite",
+            }}
+            className={`rounded-xl overflow-hidden relative transition-all duration-200 ease-in-out`}
+          >
+            <Image
+              src={dummyData[params.id].thumbnail}
+              width={1280}
+              height={720}
+              alt=""
+            />
+            <div className="absolute w-[98%] h-[3px] bg-neutral-200/50 left-1/2  -translate-x-1/2 bottom-4">
+              <div className="absolute top-1/2 -translate-y-1/2 left-0 rounded-full h-2.5 w-2.5 bg-red-500"></div>
+            </div>
+
+            {loading && (
+              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                <Lottie
+                  style={{ width: 200, height: 200 }}
+                  animationData={playPulse}
+                  width={100}
+                  height={100}
+                  loop={true}
+                />
+              </div>
+            )}
+          </div>
+          <div className="w-full bg-gradient-to-t from-neutral-900/90 text-white to-transparent flex items-center gap-2.5">
+            <button>
+              <Play size={28} className="" />
+            </button>
+            <button>
+              <SkipForward size={28} className="" />
+            </button>
+            <button>
+              <Volume2 size={28} className="" />
+            </button>
+            <p className="text-sm">0:00 / 4:20:21</p>
+            <button className="ml-auto">
+              <Settings />
+            </button>
+            <button>
+              <Maximize />
+            </button>
+          </div>
           {/* title */}
-          <h2 className="text-lg lg:text-xl leading-6 font-semibold ">
+          <h2 className="sm:text-lg lg:text-xl leading-6 font-semibold ">
             {dummyData[params.id].title}
           </h2>
           {/* channel info & buttons */}
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2.5 ">
             <div className="flex gap-2 items-center">
-              <Image
-                src={dummyData[params.id].avatar}
-                width={42}
-                height={42}
-                alt=""
-                className="rounded-full"
-              />
               <div>
-                <p className="font-semibold text-sm">
-                  {dummyData[params.id].channel}
-                </p>
-                <p className="text-xs opacity-70">165K subscribers</p>
+                {!loading ? (
+                  <Image
+                    src={dummyData[params.id].avatar}
+                    width={42}
+                    height={42}
+                    alt=""
+                    className="rounded-full"
+                  />
+                ) : (
+                  <Skeleton variant="circular" width={42} height={42} />
+                )}
+              </div>
+              <div>
+                {!loading ? (
+                  <div>
+                    <p className="font-semibold text-sm">
+                      {dummyData[params.id].channel}
+                    </p>
+                    <p className="text-xs opacity-70">165K subscribers</p>
+                  </div>
+                ) : (
+                  <Skeleton variant="text" width={100} height={42} />
+                )}
               </div>
               <button className="ml-auto md:ml-4 dark:bg-white dark:text-black bg-black text-white text-sm font-semibold px-4 py-2.5 rounded-full">
                 Subscribe
               </button>
             </div>
             <div className="flex gap-2 items-center">
-              <div className="bg-neutral-100 dark:bg-neutral-800 flex gap-4 divide-x dark:divide-neutral-700 px-4 py-2.5 rounded-full items-center">
-                <button className="flex items-center gap-2">
-                  <MenuIcon.InactiveLikedVideosIcon />
-                  <p className="text-sm font-semibold">5.2k</p>
-                </button>
-                <button className="pl-4">
-                  <div className="rotate-180">
+              {!loading ? (
+                <div className="bg-neutral-100 dark:bg-neutral-800 flex gap-4 divide-x dark:divide-neutral-700 px-4 py-2.5 rounded-full items-center">
+                  <button className="flex items-center gap-2">
                     <MenuIcon.InactiveLikedVideosIcon />
-                  </div>
-                </button>
-              </div>
+                    <p className="text-sm font-semibold">5.2k</p>
+                  </button>
+                  <button className="pl-4">
+                    <div className="rotate-180">
+                      <MenuIcon.InactiveLikedVideosIcon />
+                    </div>
+                  </button>
+                </div>
+              ) : (
+                <Skeleton variant="rounded" width={152} height={45} />
+              )}
               <button className="bg-neutral-100 dark:bg-neutral-800 flex gap-2 px-4 py-2.5 rounded-full items-center">
                 <MenuIcon.ShareIcon />
                 <span className="text-sm font-semibold">Share</span>
@@ -328,7 +395,9 @@ const IdPage = ({ params }) => {
                   <Link href={`/watch/${item.id}`}>
                     <h4 className="text-[13px] font-semibold">{item.title}</h4>
                   </Link>
-                  <p className="text-[12px] opacity-70 mt-1 hover:underline hover:cursor-pointer">{item.channel}</p>
+                  <p className="text-[12px] opacity-70 mt-1 hover:underline hover:cursor-pointer">
+                    {item.channel}
+                  </p>
                   <p className="text-[12px] opacity-70">
                     {item.views} views &bull; {monthsAgo || daysAgo} {unit}
                   </p>
