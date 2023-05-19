@@ -44,12 +44,12 @@ px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative pb-2
 `
 const Searchbar = () => {
   return (
-    <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] z-10 sm:ml-[23px]">
+    <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] xl:min-w-[480px] z-10 sm:ml-[23px]">
       <div className="relative w-full mx-4">
         <input
           type="search"
           placeholder="Search"
-          className="rounded-full bg-neutral-200/50 dark:bg-neutral-700 py-2.5 pl-6 w-full outline-none "
+          className="rounded-full bg-neutral-200/50 dark:bg-neutral-800 py-2.5 pl-6 w-full outline-none "
         />
         <Icon className="flex-shrink-0 absolute right-1 top-1/2 -translate-y-1/2">
           <MenuIcon.MicIcon className="opacity-50" />
@@ -66,7 +66,7 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
   return (
     <animated.div
       style={searchSpring}
-      className="fixed z-10 bg-white dark:bg-neutral-800 w-full top-0 left-0 md:hidden shadow"
+      className="fixed z-10 bg-white dark:bg-neutral-900 w-full top-0 left-0 md:hidden shadow"
     >
       <div className="h-[54px] flex items-center justify-center">
         <div className="relative w-full mx-4">
@@ -80,7 +80,7 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
             ref={searchRef}
             type="search"
             placeholder="Search"
-            className="rounded-full bg-neutral-200/50 dark:bg-neutral-700 py-2.5 pl-12 w-full outline-none "
+            className="rounded-full bg-neutral-200/50 dark:bg-neutral-800 py-2.5 pl-12 w-full outline-none "
           />
           <Icon className="flex-shrink-0 absolute right-1 top-1/2 -translate-y-1/2">
             <MenuIcon.MicIcon className="opacity-50" />
@@ -88,7 +88,7 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
         </div>
       </div>
       <ul className="font-medium">
-        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
+        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 cursor-pointer">
           <Icon className="opacity-50">
             <MenuIcon.SearchIcon />
           </Icon>
@@ -97,7 +97,7 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
             <ArrowUpLeft className="opacity-50" />
           </Icon>
         </li>
-        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
+        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 cursor-pointer">
           <Icon className="opacity-50">
             <MenuIcon.SearchIcon />
           </Icon>
@@ -106,7 +106,7 @@ const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
             <ArrowUpLeft className="opacity-50" />
           </Icon>
         </li>
-        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70">
+        <li className="flex items-center gap-4 py-2.5 px-4 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 cursor-pointer">
           <Icon className="opacity-50">
             <MenuIcon.SearchIcon />
           </Icon>
@@ -123,12 +123,16 @@ const Topics = () => {
   const [currentTopic, setCurrentTopic] = useState("All")
 
   return (
-    <ul id="topics" className="text-sm inline-flex whitespace-nowrap gap-1.5">
+    <ul
+      id="topics"
+      className="text-sm inline-flex whitespace-nowrap gap-1.5 pr-5"
+    >
       <li
         onClick={() => setCurrentTopic("All")}
-        className={`rounded-full px-3 py-1.5  ${
-          currentTopic === "All" &&
-          "bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium"
+        className={`rounded-full px-3 py-1.5   ${
+          currentTopic === "All"
+            ? "dark:bg-neutral-100 bg-neutral-900  dark:text-black text-white font-medium"
+            : "dark:bg-neutral-800"
         }`}
       >
         <button>All</button>
@@ -137,9 +141,10 @@ const Topics = () => {
         <li
           onClick={() => setCurrentTopic(topic)}
           key={topic}
-          className={`rounded-full px-3 py-1.5  whitespace-nowrap ${
-            currentTopic === topic &&
-            "bg-neutral-900/90 dark:bg-neutral-100 dark:text-black text-white font-medium"
+          className={`rounded-full px-3 py-1.5   ${
+            currentTopic === topic
+              ? "dark:bg-neutral-100 bg-neutral-900 dark:text-black text-white font-medium"
+              : "dark:bg-neutral-800"
           }`}
         >
           <button>{topic}</button>
@@ -394,6 +399,8 @@ const Header = ({ videos }) => {
   const menuRef = useRef(null)
   const searchRef = useRef(null)
   const pathname = usePathname()
+  const [showNotifcations, setShowNotifcations] = useState(false)
+  const notificationsRef = useRef(null)
 
   const handleSearch = () => {
     setOpenSearch(!openSearch)
@@ -476,6 +483,8 @@ const Header = ({ videos }) => {
     return () => {}
   }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
 
+  useOnClickOutside(notificationsRef, () => setShowNotifcations(false))
+
   return (
     <>
       <MenuBackdrop
@@ -508,9 +517,47 @@ const Header = ({ videos }) => {
               />
             </Logo>
             <Searchbar />
-            <Icon className="relative ml-auto">
+            <Icon
+              ref={notificationsRef}
+              onClick={() => setShowNotifcations(!showNotifcations)}
+              className="relative ml-auto"
+            >
               <MenuIcon.BellIcon />
               <div className="absolute top-1 right-2 shadow bg-red-500 rounded-full w-2 h-2" />
+              {/* notifications */}
+              <div
+                className={`fixed sm:absolute z-10 dark:bg-neutral-800 bg-white opacity-0 pointer-events-none rounded-lg shadow-lg top-full w-[96%] sm:min-w-[420px] xl:min-w-[500px] mx-auto left-1/2 sm:left-auto sm:right-0 sm:translate-x-0 -translate-x-1/2 items-center grid divide-y translate-y-4 overflow-hidden dark:divide-neutral-700 transition-opacity duration-150 ease-in max-w-md sm:ml-8 ${
+                  showNotifcations && "opacity-100 pointer-events-auto"
+                }`}
+              >
+                {videos.slice(0, 3).map((video) => (
+                  <div key={video.id} className="flex items-center gap-3 p-3 dark:hover:bg-neutral-700 hover:bg-neutral-200">
+                    <Image
+                      src={video.avatar}
+                      width={38}
+                      height={38}
+                      alt=""
+                      className="rounded-full cursor-pointer flex-shrink-0 self-start pb-px"
+                    />
+                    <div className="text-sm flex flex-col items-start justify-start">
+                      <p className="whitespace-nowrap font-medium mb-1">
+                        {video.channel} uploaded:
+                      </p>
+
+                      <Image
+                        src={video.thumbnail}
+                        width={168}
+                        height={48}
+                        alt=""
+                        className="rounded flex-1 cursor-pointer flex-shrink-0  min-w-[168px]"
+                      />
+
+                      <p className="text-xs mt-1 font-light">2 weeks ago</p>
+                    </div>
+                    <p className="text-left self-start pt-4 mt-1 text-sm">{video.title}</p>
+                  </div>
+                ))}
+              </div>
             </Icon>
             <Icon className="hidden sm:grid">
               <MenuIcon.CreateIcon />
@@ -545,7 +592,7 @@ const Header = ({ videos }) => {
           >
             {/* left arrow */}
             {scrollX !== 0 && (
-              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[32px] w-[80px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 hover:opacity-100 pointer-events-none">
+              <div className="fixed bg-gradient-to-r from-white to-transparent dark:from-neutral-900 flex items-center h-[32px] w-[130px] left-0 sm:left-16 transition-all duration-300 ease-in z-10 opacity-0 hover:opacity-100 pointer-events-none">
                 <button
                   onClick={() =>
                     slide((scrollRef.current.offsetWidth / 2) * -1)
@@ -562,7 +609,7 @@ const Header = ({ videos }) => {
             <Topics />
             {/* right arrow */}
             {!scrollEnd && (
-              <div className="opacity-0 hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[32px]  w-[80px] right-0 bg-gradient-to-l from-white top-[64px] to-transparent transition-opacity duration-300 ease-in pointer-events-none">
+              <div className="opacity-0 hover:opacity-100 fixed dark:from-neutral-900 flex items-center h-[32px]  w-[120px] right-0 bg-gradient-to-l from-white top-[64px] to-transparent transition-opacity duration-300 ease-in pointer-events-none">
                 <button
                   onClick={() => slide(scrollRef.current.offsetWidth / 2)}
                   onDoubleClick={() => slide(scrollRef.current.offsetWidth * 3)}
@@ -580,3 +627,25 @@ const Header = ({ videos }) => {
 }
 
 export default Header
+
+const useOnClickOutside = (ref, handler) => {
+  const savedHandler = useRef()
+
+  useEffect(() => {
+    savedHandler.current = handler
+  }, [handler])
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        savedHandler.current()
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside)
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside)
+    }
+  }, [ref])
+}

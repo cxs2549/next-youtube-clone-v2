@@ -5,7 +5,7 @@ import { Plus } from "react-feather"
 
 const BottomNav = () => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-neutral-900/90 backdrop-blur-md dark:bg-neutral-800/90 text-white h-[76px] flex items-center justify-between sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-neutral-900/90 backdrop-blur-md dark:bg-neutral-800/90 text-white h-[66px] flex items-center justify-between sm:hidden">
       <div className="flex items-center pl-5 justify-between w-4/12">
         <Link href={`/`} className="flex flex-col gap-1 items-center w-[23px] h-[24px] justify-center">
           <Image

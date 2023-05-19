@@ -16,7 +16,7 @@ import * as Icon from "@/public/icons/icons"
 import Link from "next/link"
 
 const Chips = tw.div`
- flex items-center w-full overflow-x-scroll group relative
+ flex items-center w-full mb-2.5 overflow-x-scroll group relative
 `
 
 const Topics = ({ topics }) => {
@@ -127,10 +127,10 @@ const IdPage = ({ params }) => {
     return () => {}
   }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
   return (
-    <Layout classes="sm:pl-[82px]  sm:pr-4 pt-3 mb-20">
+    <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20">
       <div className=" grid lg:flex gap-2.5 mx-2 sm:mx-0">
         {/* video & info/comment */}
-        <div className="flex flex-col  gap-2.5 flex-1">
+        <div className="flex flex-col gap-2.5 flex-1">
           <Image
             src={dummyData[params.id].thumbnail}
             width={1280}
@@ -144,16 +144,18 @@ const IdPage = ({ params }) => {
           </h2>
           {/* channel info & buttons */}
           <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-2.5 ">
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Image
                 src={dummyData[params.id].avatar}
-                width={44}
-                height={44}
+                width={42}
+                height={42}
                 alt=""
                 className="rounded-full"
               />
               <div>
-                <p className="font-semibold">{dummyData[params.id].channel}</p>
+                <p className="font-semibold text-sm">
+                  {dummyData[params.id].channel}
+                </p>
                 <p className="text-xs opacity-70">165K subscribers</p>
               </div>
               <button className="ml-auto md:ml-4 dark:bg-white dark:text-black bg-black text-white text-sm font-semibold px-4 py-2.5 rounded-full">
@@ -191,7 +193,7 @@ const IdPage = ({ params }) => {
           </div>
           {/* description */}
           <div className="bg-neutral-100 dark:bg-neutral-800 rounded-xl  p-4 text-sm grid gap-1 ">
-            <p className="text-neutral-700 font-semibold">
+            <p className="text-neutral-700 font-semibold dark:text-neutral-300/80">
               {dummyData[params.id].views} views &bull; {monthsAgo || daysAgo}{" "}
               {unit}
             </p>
@@ -212,7 +214,7 @@ const IdPage = ({ params }) => {
               </div>
               <input
                 type="text"
-                className="border-b outline-none pb-px w-full text-sm"
+                className="border-b outline-none pb-px w-full text-sm dark:bg-transparent dark:border-neutral-700"
                 placeholder="Add a comment... "
               />
             </div>
@@ -229,7 +231,9 @@ const IdPage = ({ params }) => {
             </button>
             {/* comments list */}
             <div
-              className={`my-6 grid gap-6 ${showComments ? "block" : "hidden"}`}
+              className={`-mt-3 mb-6 grid gap-6 ${
+                showComments ? "block" : "hidden"
+              }`}
             >
               {dummyData.map((item) => (
                 <div key={item.id} className="flex gap-3">
@@ -271,7 +275,7 @@ const IdPage = ({ params }) => {
           </section>
         </div>
         {/* filters/recs */}
-        <div className="flex overflow-y-scroll flex-col lg:max-w-[31%] gap-8 w-full">
+        <div className="flex overflow-y-scroll flex-col lg:max-w-[31%] gap-5 sm:min-w-[380px] w-full">
           <Chips ref={scrollRef} onScroll={scrollCheck}>
             {/* left arrow */}
             {scrollX !== 0 && (
@@ -305,31 +309,31 @@ const IdPage = ({ params }) => {
           </Chips>
           <section className="grid gap-2.5">
             {dummyData.map((item) => (
-              <Link
-                href={`/watch/${item.id}`}
-                key={item.id}
-                className="flex gap-2"
-              >
-                <div className="relative w-5/12">
-                  <Image
-                    src={item.thumbnail}
-                    width={280}
-                    height={160}
-                    alt=""
-                    className=" rounded-lg w-full"
-                  />
-                  <div className="absolute bottom-1 right-1 bg-black/70 text-white text-[13px] font-semibold p-0.5 rounded">
+              <div key={item.id} className="flex gap-2.5">
+                <div className="relative w-6/12">
+                  <Link href={`/watch/${item.id}`} className="flex gap-2">
+                    <Image
+                      src={item.thumbnail}
+                      width={280}
+                      height={160}
+                      alt=""
+                      className=" rounded-lg w-full"
+                    />
+                  </Link>
+                  <div className="absolute bottom-1 right-1 bg-black/70 text-white text-[13px] cursor-pointer font-semibold p-0.5 rounded">
                     {item.duration}
                   </div>
                 </div>
                 <div className="flex-1 pt-1">
-                  <h4 className="text-[13px] font-semibold">{item.title}</h4>
-                  <p className="text-[12px] opacity-70 mt-1">{item.channel}</p>
+                  <Link href={`/watch/${item.id}`}>
+                    <h4 className="text-[13px] font-semibold">{item.title}</h4>
+                  </Link>
+                  <p className="text-[12px] opacity-70 mt-1 hover:underline hover:cursor-pointer">{item.channel}</p>
                   <p className="text-[12px] opacity-70">
                     {item.views} views &bull; {monthsAgo || daysAgo} {unit}
                   </p>
                 </div>
-              </Link>
+              </div>
             ))}
           </section>
         </div>

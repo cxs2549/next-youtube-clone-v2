@@ -50,10 +50,10 @@ const Video = ({
             width={500}
             height={300}
             alt="video"
-            className="rounded cursor-pointer"
+            className="rounded-lg cursor-pointer"
           />
         </Link>
-        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-sm font-semibold px-1 py-px">
+        <div className="absolute bottom-2 right-2 bg-black/70 rounded text-white text-sm font-semibold px-1 py-px">
           {duration}
         </div>
       </div>
@@ -68,8 +68,8 @@ const Video = ({
             className="rounded-full cursor-pointer self-center"
           />
           <div className="text-neutral-700/90 dark:text-neutral-400">
-            <p className=" text-sm hover:underline cursor-pointer">{channel}</p>
-            <p className=" text-sm">
+            <p className=" text-sm hover:underline cursor-pointer font-medium">{channel}</p>
+            <p className=" text-[12px]">
               {views} views &bull; {monthsAgo || daysAgo} {unit}
             </p>
           </div>
