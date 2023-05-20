@@ -44,7 +44,7 @@ px-4 flex items-center overflow-x-scroll group sm:ml-[66px] relative pb-2
 `
 const Searchbar = () => {
   return (
-    <div className="hidden md:flex items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] xl:min-w-[480px] z-10 sm:ml-[23px]">
+    <div className="hidden md:flex z-30 items-center justify-center absolute left-1/2 -translate-x-1/2 min-w-[340px] lg:min-w-[420px] xl:min-w-[480px] sm:ml-[23px]">
       <div className="relative w-full mx-4">
         <input
           type="search"
@@ -58,15 +58,25 @@ const Searchbar = () => {
     </div>
   )
 }
-const SearchDropdown = ({ openSearch, searchRef, handleSearch }) => {
+const SearchDropdown = ({
+  openSearch,
+  setOpenSearch,
+  searchRef,
+  handleSearch,
+}) => {
+  const searchDropdownRef = useRef(null)
+
   const searchSpring = useSpring({
     transform: openSearch ? "translateY(0)" : "translateY(-230px)",
     opacity: openSearch ? 1 : 0,
   })
+
+  // useOnClickOutside(searchDropdownRef, () => setOpenSearch(false))
   return (
     <animated.div
+      ref={searchDropdownRef}
       style={searchSpring}
-      className="fixed z-10 bg-white dark:bg-neutral-900 w-full top-0 left-0 md:hidden shadow"
+      className="fixed bg-white dark:bg-neutral-900 w-full top-0 left-0 z-20 md:hidden shadow"
     >
       <div className="h-[54px] flex items-center justify-center">
         <div className="relative w-full mx-4">
@@ -172,7 +182,7 @@ const Menu = ({ openMenu, menuRef, handleMenu, videos }) => {
     <animated.div
       ref={menuRef}
       style={menuSpring}
-      className={`fixed z-20 left-0 top-0 bg-white dark:bg-neutral-800 backdrop-blur-sm shadow  text-sm overflow-hidden hidden sm:block overflow-y-scroll h-full`}
+      className={`fixed z-50 left-0 top-0 bg-white dark:bg-neutral-800 backdrop-blur-sm shadow  text-sm overflow-hidden hidden sm:block overflow-y-scroll h-full`}
     >
       <ul className="grid border-b dark:border-neutral-700">
         <div
@@ -403,11 +413,11 @@ const Header = ({ videos }) => {
   const notificationsRef = useRef(null)
 
   const handleSearch = () => {
-    setOpenSearch(!openSearch)
+    setOpenSearch(prev => !prev)
     !openSearch
       ? (document.body.style.overflow = "hidden")
       : (document.body.style.overflow = "auto")
-    menuRef.current.style.zIndex = openSearch ? "10" : "1"
+    menuRef.current.style.zIndex = openSearch ? "20" : "1"
     setTimeout(
       () =>
         openSearch ? searchRef.current?.blur() : searchRef.current?.focus(),
@@ -420,6 +430,7 @@ const Header = ({ videos }) => {
       ? (document.body.style.overflow = "hidden")
       : (document.body.style.overflow = "auto")
   }, [openMenu])
+
   const slide = (shift) => {
     const scrollLeft = scrollRef.current?.scrollLeft
     const maxScrollLeft =
@@ -484,7 +495,7 @@ const Header = ({ videos }) => {
   }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
 
   useOnClickOutside(notificationsRef, () => setShowNotifcations(false))
-
+  useOnClickOutside(menuRef, () => setOpenMenu(false))
   return (
     <>
       <MenuBackdrop
@@ -571,7 +582,11 @@ const Header = ({ videos }) => {
                 ))}
               </div>
               {/* notifications backdrop */}
-              <div className={`fixed inset-0 h-screen bg-black/70 z-40 opacity-0 pointer-events-none ${showNotifcations && 'opacity-100'}`}></div>
+              <div
+                className={`fixed inset-0 h-screen bg-black/70 z-40 opacity-0 pointer-events-none ${
+                  showNotifcations && "opacity-100"
+                }`}
+              ></div>
             </Icon>
             <Icon className="hidden sm:grid">
               <MenuIcon.CreateIcon />

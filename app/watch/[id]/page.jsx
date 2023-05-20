@@ -14,17 +14,14 @@ import {
   SkipForward,
   Volume2,
 } from "react-feather"
-import tw from "tailwind-styled-components"
 import { useEffect, useRef, useState } from "react"
 import * as Icon from "@/public/icons/icons"
 import Link from "next/link"
 import { Skeleton } from "@mui/material"
 import Lottie from "lottie-react"
-import playPulse from "@/public/play.json"
-
-const Chips = tw.div`
- flex items-center w-full mb-2.5 overflow-x-scroll group relative
-`
+import Snoop from "@/public/snoop.json"
+import axios from "axios"
+import MediaPlayer from "@/app/components/MediaPlayer"
 
 const Topics = ({ topics }) => {
   const [currentTopic, setCurrentTopic] = useState("All")
@@ -52,7 +49,13 @@ const Topics = ({ topics }) => {
 }
 
 const IdPage = ({ params }) => {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [playlist, setPlaylist] = useState(null)
+  const [currentSongIndex, setCurrentSongIndex] = useState(0)
+  const [src, setSrc] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [songLoaded, setSongLoaded] = useState(false)
+  const audioPlayerRef = useRef(null)
   const [showComments, setShowComments] = useState(false)
   const topics = [
     "All",
@@ -73,135 +76,114 @@ const IdPage = ({ params }) => {
 
   const unit =
     monthsAgo === 1 ? "month ago" : monthsAgo > 1 ? "months ago" : "day ago"
-  const [scrollX, setscrollX] = useState(0)
-  const [scrollEnd, setscrollEnd] = useState(false)
-  const scrollRef = useRef(null)
-  const slide = (shift) => {
-    const scrollLeft = scrollRef.current?.scrollLeft
-    const maxScrollLeft =
-      scrollRef.current?.scrollWidth - scrollRef.current.offsetWidth
 
-    let targetScrollLeft = scrollLeft + shift
-    if (targetScrollLeft < 0) {
-      targetScrollLeft = 0
-    } else if (targetScrollLeft > maxScrollLeft) {
-      targetScrollLeft = maxScrollLeft
-    }
-
-    const duration = 500 // in milliseconds
-    const startTime = performance.now()
-    const endTime = startTime + duration
-
-    const easeInOutQuad = (t) => {
-      t /= duration / 2
-      if (t < 1) return (shift / 2) * t * t + scrollLeft
-      t--
-      return (-shift / 2) * (t * (t - 2) - 1) + scrollLeft
-    }
-
-    const scroll = (currentTime) => {
-      if (currentTime >= endTime) {
-        scrollRef.current.scrollLeft = targetScrollLeft
-        setscrollX(targetScrollLeft)
-        return
-      }
-      const time = currentTime - startTime
-      const newScrollLeft = easeInOutQuad(time)
-      scrollRef.current.scrollLeft = newScrollLeft
-      setscrollX(newScrollLeft)
-      requestAnimationFrame(scroll)
-    }
-
-    requestAnimationFrame(scroll)
-    setscrollEnd(targetScrollLeft >= maxScrollLeft)
-  }
-  const scrollCheck = () => {
-    setscrollX(scrollRef.current.scrollLeft)
-    if (
-      Math.floor(
-        scrollRef.current.scrollWidth - scrollRef.current.scrollLeft
-      ) <= scrollRef.current.offsetWidth
-    ) {
-      setscrollEnd(true)
-    } else {
-      setscrollEnd(false)
-    }
-  }
-  useEffect(() => {
-    if (
-      scrollRef.current &&
-      scrollRef?.current?.scrollWidth === scrollRef?.current?.offsetWidth
-    ) {
-      setscrollEnd(true)
-    } else {
-      setscrollEnd(false)
-    }
-    return () => {}
-  }, [scrollRef?.current?.scrollWidth, scrollRef?.current?.offsetWidth])
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000)
     return () => clearTimeout()
   }, [])
+
+  useEffect(() => {
+    const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
+    const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET
+    const authOptions = {
+      url: "https://accounts.spotify.com/api/token",
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(client_id + ":" + client_secret).toString("base64"),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      form: {
+        grant_type: "client_credentials",
+      },
+      json: true,
+    }
+
+    axios
+      .post(authOptions.url, authOptions.form, {
+        headers: authOptions.headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const token = response.data.access_token
+          const playlistId = "2vKEgEm5LvffCq9EJLl0A7" // Replace with the actual Spotify song ID
+
+          const requestOptions = {
+            url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+
+          axios
+            .get(requestOptions.url, {
+              headers: requestOptions.headers,
+            })
+            .then((playlistResponse) => {
+              if (playlistResponse.status === 200) {
+                const playlistData = playlistResponse.data
+
+                setPlaylist(playlistData.items)
+                setSrc(playlistData.items[0].track.preview_url)
+                audioPlayerRef.current.load()
+              }
+            })
+            .catch((error) => {
+              // Handle error
+              console.error("Error:", error)
+            })
+        }
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error:", error)
+      })
+  }, [])
+
+  const handleLoadedData = () => {
+    setSongLoaded(true)
+  }
+
   return (
     <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20 sm:mb-0">
-      <div className=" grid lg:flex gap-2.5 lg:gap-6 mx-2 sm:mx-0">
+      <div className="grid  lg:flex gap-2.5 lg:gap-6 mx-2 sm:mx-0">
         {/* video & info/comment */}
         <div className="flex flex-col gap-2.5 pb-4 flex-1 overflow-y-scroll  h-[calc(100vh-80px)]">
           <div
             style={{
               animation: loading && "pulseAnimation 2s linear infinite",
             }}
-            className={`rounded-xl overflow-hidden relative transition-all flex-shrink-0 duration-200 ease-in-out`}
+            className={`rounded-xl overflow-hidden relative transition-all flex-shrink-0 duration-200 ease-in-out after:z-0 after:absolute after:inset-0 after:bg-neutral-800 ${
+              isPlaying ? "after:opacity-100" : "after:opacity-0"
+            }`}
           >
+            <div
+              className={`absolute inset-0 transition-opacity duration-500  ease-out z-10 ${
+                songLoaded && isPlaying ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <Lottie animationData={Snoop} loop={true} />
+            </div>
             <Image
               src={dummyData[params.id].thumbnail}
               width={1280}
               height={720}
               alt=""
             />
-            <div className="absolute w-[98%] h-[3px] bg-neutral-200/50 left-1/2  -translate-x-1/2 bottom-4">
-              <div className="absolute top-1/2 -translate-y-1/2 left-0 rounded-full h-2.5 w-2.5 bg-red-500"></div>
-            </div>
+          </div>
 
-            {loading && (
-              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
-                <Lottie
-                  style={{ width: 200, height: 200 }}
-                  animationData={playPulse}
-                  width={100}
-                  height={100}
-                  loop={true}
-                />
-              </div>
-            )}
-          </div>
-          <div className="w-full dark:text-white/90  flex items-center gap-4">
-            <button>
-              <Play
-                size={28}
-                className="stroke-black dark:stroke-white/70 fill-black dark:fill-white/90"
-              />
-            </button>
-            <button>
-              <SkipForward
-                size={28}
-                className="fill-black dark:fill-white/90 stroke-black dark:stroke-white/70"
-              />
-            </button>
-            <button>
-              <Volume2
-                size={28}
-                className="stroke-black dark:stroke-white/90"
-              />
-            </button>
-            <p className="text-sm opacity-80">0:00 / 4:20:21</p>
-            <button className="ml-auto">
-              <Settings />
-            </button>
-            <button>
-              <Maximize />
-            </button>
-          </div>
+          <MediaPlayer
+            src={src}
+            handleLoadedData={handleLoadedData}
+            songLoaded={songLoaded}
+            setSongLoaded={setSongLoaded}
+            setIsPlaying={setIsPlaying}
+            isPlaying={isPlaying}
+            currentSongIndex={currentSongIndex}
+            setCurrentSongIndex={setCurrentSongIndex}
+            playlist={playlist}
+          />
+
           {/* title */}
           <h2 className="sm:text-lg lg:text-xl leading-6 font-semibold ">
             {dummyData[params.id].title}
