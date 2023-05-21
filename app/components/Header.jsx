@@ -30,10 +30,10 @@ const Icon = tw.button`
 grid place-items-center rounded-full font-semibold w-9 h-9 hover:bg-neutral-200/50 dark:hover:bg-neutral-700/90
 `
 const MenuBackdrop = tw.div`
-fixed inset-0 bg-black/70 z-10 transition-opacity duration-400 h-screen ease-in hidden sm:block
+fixed inset-0 bg-black/70 z-20 transition-opacity duration-400 h-screen ease-in hidden sm:block
 `
 const SearchBackdrop = tw.div`
-  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-neutral-900/80 z-10 dark:from-neutral-900/50 dark:to-black/80 transition-opacity duration-500 ease-in-out md:hidden
+  fixed inset-0 h-screen bg-gradient-to-b from-neutral-900/50 to-neutral-900/80 z-20 dark:from-neutral-900/50 dark:to-black/80 transition-opacity duration-500 ease-in-out md:hidden
 `
 const Nav = tw.nav`
 flex items-center gap-3 h-[64px]
@@ -60,9 +60,9 @@ const Searchbar = () => {
 }
 const SearchDropdown = ({
   openSearch,
-  setOpenSearch,
   searchRef,
   handleSearch,
+  setOpenSearch
 }) => {
   const searchDropdownRef = useRef(null)
 
@@ -71,7 +71,6 @@ const SearchDropdown = ({
     opacity: openSearch ? 1 : 0,
   })
 
-  // useOnClickOutside(searchDropdownRef, () => setOpenSearch(false))
   return (
     <animated.div
       ref={searchDropdownRef}

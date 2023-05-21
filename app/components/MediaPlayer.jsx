@@ -11,11 +11,11 @@ const MediaPlayer = ({
   currentSongIndex,
   setCurrentSongIndex,
   playlist,
+  tempo,
 }) => {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const audioRef = useRef(null)
-  console.log(playlist)
   const handlePlay = () => {
     audioRef.current.play()
     if (songLoaded) {
@@ -72,12 +72,13 @@ const MediaPlayer = ({
     audioRef.current.src = nextSongSrc
     audioRef.current.load()
     audioRef.current.play()
+    setIsPlaying(true)
   }
 
   const getNextSongSrc = () => {
     // Replace this with your logic to get the URL of the next song
     // For example, you could have an array of song URLs and a current song index
-    setCurrentSongIndex((prev) => prev + 1)
+    setCurrentSongIndex((prev) => (prev + 1) % playlist.length)
     const nextSongIndex = currentSongIndex + 1
     if (nextSongIndex < playlist.length) {
       const nextSongSrc = playlist[nextSongIndex].track.preview_url
@@ -126,7 +127,7 @@ const MediaPlayer = ({
                 onClick={handlePause}
                 className={!isPlaying ? "hidden" : ""}
                 id="pause-icon"
-                width="14"
+                width="12"
                 height="36"
                 viewBox="0 0 24 36"
                 fill="none"

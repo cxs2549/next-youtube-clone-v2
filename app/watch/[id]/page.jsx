@@ -49,6 +49,10 @@ const Topics = ({ topics }) => {
 }
 
 const IdPage = ({ params }) => {
+  const [isFetching, setIsFetching] = useState(false)
+  const [animationSpeed, setAnimationSpeed] = useState(1)
+  const baseBPM = 120 // Set your desired base BPM here
+  const [currentBpm, setCurrentBpm] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playlist, setPlaylist] = useState(null)
   const [currentSongIndex, setCurrentSongIndex] = useState(0)
@@ -57,6 +61,7 @@ const IdPage = ({ params }) => {
   const [songLoaded, setSongLoaded] = useState(false)
   const audioPlayerRef = useRef(null)
   const [showComments, setShowComments] = useState(false)
+
   const topics = [
     "All",
     `From ${dummyData[params.id].channel}`,
@@ -83,6 +88,7 @@ const IdPage = ({ params }) => {
   }, [])
 
   useEffect(() => {
+    setIsFetching(true)
     const client_id = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID
     const client_secret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET
     const authOptions = {
@@ -98,15 +104,16 @@ const IdPage = ({ params }) => {
       },
       json: true,
     }
-
+    let token
     axios
       .post(authOptions.url, authOptions.form, {
         headers: authOptions.headers,
       })
       .then((response) => {
         if (response.status === 200) {
-          const token = response.data.access_token
-          const playlistId = "2vKEgEm5LvffCq9EJLl0A7" // Replace with the actual Spotify song ID
+          token = response.data.access_token
+
+          const playlistId = "2vKEgEm5LvffCq9EJLl0A7"
 
           const requestOptions = {
             url: `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
@@ -122,11 +129,11 @@ const IdPage = ({ params }) => {
             .then((playlistResponse) => {
               if (playlistResponse.status === 200) {
                 const playlistData = playlistResponse.data
-
                 setPlaylist(playlistData.items)
                 setSrc(playlistData.items[0].track.preview_url)
                 audioPlayerRef.current.load()
               }
+              setIsFetching(false)
             })
             .catch((error) => {
               // Handle error
@@ -135,17 +142,46 @@ const IdPage = ({ params }) => {
         }
       })
       .catch((error) => {
-        // Handle error
         console.error("Error:", error)
       })
   }, [])
+
+  const calculateAnimationSpeed = (songBPM) => {
+    // Adjust this formula based on your desired animation speed scaling
+    const targetSpeed = songBPM / baseBPM // Assuming the animation is designed for 120 BPM
+    return targetSpeed
+  }
 
   const handleLoadedData = () => {
     setSongLoaded(true)
   }
 
+  useEffect(() => {
+    if (!isFetching && playlist !== null) {
+      const songId = playlist[0].track.id
+      const analysisOptions = {
+        url: `https://api.spotify.com/v1/audio-analysis/${songId}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      axios
+        .get(analysisOptions.url, {
+          headers: analysisOptions.headers,
+        })
+        .then((analysisResponse) => {
+          if (analysisResponse.status === 200) {
+            const tempo = analysisResponse.data.track.tempo
+            setCurrentBpm(tempo)
+            const targetSpeed = calculateAnimationSpeed(tempo)
+            setAnimationSpeed(targetSpeed)
+          }
+        })
+    }
+  }, [playlist, isFetching])
+
   return (
-    <Layout classes="sm:pl-[82px]   sm:pr-4 pt-3 mb-20 sm:mb-0">
+    <Layout classes="sm:pl-[82px] z-0 relative  sm:pr-4 pt-3 mb-20 sm:mb-0">
       <div className="grid  lg:flex gap-2.5 lg:gap-6 mx-2 sm:mx-0">
         {/* video & info/comment */}
         <div className="flex flex-col gap-2.5 pb-4 flex-1 overflow-y-scroll  h-[calc(100vh-80px)]">
@@ -162,7 +198,11 @@ const IdPage = ({ params }) => {
                 songLoaded && isPlaying ? "opacity-100" : "opacity-0"
               }`}
             >
-              <Lottie animationData={Snoop} loop={true} />
+              <Lottie
+                animationData={Snoop}
+                loop={true}
+                speed={animationSpeed}
+              />
             </div>
             <Image
               src={dummyData[params.id].thumbnail}
@@ -182,6 +222,8 @@ const IdPage = ({ params }) => {
             currentSongIndex={currentSongIndex}
             setCurrentSongIndex={setCurrentSongIndex}
             playlist={playlist}
+            tempo={currentBpm}
+
           />
 
           {/* title */}
